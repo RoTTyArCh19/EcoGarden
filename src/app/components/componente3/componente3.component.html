@@ -1,0 +1,55 @@
+<ion-content [fullscreen]="true" class="ion-padding-horizontal">
+  <ion-title class="ion-padding-top ion-text-center">
+    <ion-label>
+      <h1>Notas</h1>
+    </ion-label>
+  </ion-title>
+
+  <div class="note-form">
+    <h3>{{ editingNote ? 'Editar Nota' : 'Crear Nueva Nota' }}</h3>
+    <ion-item>
+      <ion-label position="floating">Título de la nota</ion-label>
+      <ion-input type="text" [(ngModel)]="currentNote.title"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Contenido de la nota</ion-label>
+      <ion-textarea [(ngModel)]="currentNote.content" rows="5"></ion-textarea>
+    </ion-item>
+    <ion-button expand="block" (click)="saveNote()"color="mycolor">
+      {{ editingNote ? 'Actualizar Nota' : 'Guardar Nota' }}
+    </ion-button>
+    <ion-button *ngIf="editingNote" expand="block" color="medium" (click)="cancelEdit()">
+      Cancelar
+    </ion-button>
+  </div>
+
+  <div class="notes-container" *ngIf="notes.length > 0">
+    <h3>Mis Notas ({{notes.length}})</h3>
+    
+    <ion-list>
+      <ion-item *ngFor="let note of notes; let i = index" class="note-item">
+        <ion-label>
+          <h2>{{ note.title }}</h2>
+          <p>{{ getShortContent(note.content) }}</p>
+          <p><small>Creada: {{ note.created | date:'short' }}</small></p>
+          <p *ngIf="note.updated"><small>Modificada: {{ note.updated | date:'short' }}</small></p>
+        </ion-label>
+        
+        <div class="note-actions">
+          <ion-button fill="clear" color="primary" (click)="editNote(i)">
+            <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="confirmDelete(i)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="empty-state" *ngIf="notes.length === 0">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <h4>No hay notas aún</h4>
+    <p>Crea tu primera nota usando el formulario superior</p>
+  </div>
+</ion-content>

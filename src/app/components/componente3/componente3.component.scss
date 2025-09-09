@@ -1,0 +1,75 @@
+.note-form {
+  background: var(--ion-color-light);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.notes-container {
+  margin-top: 20px;
+}
+
+.note-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 15px;
+  border-left: 4px solid var(--ion-color-primary);
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  
+  ion-label {
+    padding: 15px;
+    
+    h2 {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--ion-color-dark);
+    }
+    
+    p {
+      color: var(--ion-color-medium);
+      margin-bottom: 5px;
+    }
+    
+    small {
+      color: var(--ion-color-medium);
+    }
+  }
+}
+
+.note-actions {
+  display: flex;
+  padding: 0 10px;
+  
+  ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    margin: 0 2px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ion-color-medium);
+  
+  ion-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .note-item {
+    flex-direction: column;
+    
+    .note-actions {
+      padding: 10px;
+      justify-content: flex-end;
+      border-top: 1px solid var(--ion-color-light);
+      width: 100%;
+    }
+  }
+}

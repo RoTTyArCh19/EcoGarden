@@ -1,0 +1,70 @@
+<ion-content [fullscreen]="true" class="ion-padding-horizontal">
+
+  <ion-title class="ion-padding-top ion-text-center">
+    <ion-label>
+      <h1>Plantas</h1>
+    </ion-label>
+  </ion-title>
+
+  <ion-card class="ion-padding">
+    <ion-item>
+      <ion-label position="floating">¿Quién la cultivó?</ion-label>
+      <ion-input type="text" [(ngModel)]="dato.cultivador"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Nombre flor/árbol/verdura</ion-label>
+      <ion-input type="text" [(ngModel)]="dato.nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Tipo</ion-label>
+      <ion-select placeholder="Seleccione tipo" [(ngModel)]="dato.tipo">
+        <ion-select-option *ngFor="let t of tipos" [value]="t">{{ t }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Fecha de cultivado</ion-label>
+      <ion-input type="date" [(ngModel)]="dato.fecha"></ion-input>
+    </ion-item>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" color="medium" (click)="limpiar()">Limpiar</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button expand="block" color="success" (click)="crear()">
+            {{ editIndex !== null ? 'Actualizar' : 'Crear' }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+  <!-- Lista de plantas -->
+  <ion-list *ngIf="plantas.length > 0">
+    <ion-list-header>
+      <ion-label>Mis Cultivos</ion-label>
+    </ion-list-header>
+
+    <ion-item *ngFor="let p of plantas; let i = index">
+      <ion-label>
+        <h2>{{ p.nombre }} ({{ p.tipo }})</h2>
+        <p>Cultivado por: {{ p.cultivador }}</p>
+        <p>Fecha: {{ p.fecha }}</p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button color="warning" (click)="editar(i)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" (click)="eliminar(i)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
+

@@ -1,0 +1,7 @@
+{
+  "name": "ejSemana3",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
