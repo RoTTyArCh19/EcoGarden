@@ -1,19 +1,32 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Ejemplo LocalStorage - EA2
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>{{usuario.email}}</strong>
-  </div>
+  <ion-card>
+    <ion-input type="text" placeholder="Ingrese Nombre" [(ngModel)]="nombre"></ion-input>
+    <ion-input type="number" placeholder="Ingrese Número" [(ngModel)]="numero"></ion-input>
+    <ion-button shape="block" (click)="guardar()">Guardar en BD</ion-button>   
+    <ion-button shape="block" (click)="eliminar()">Eliminar un N° de la BD</ion-button>  
+    <ion-button shape="block" (click)="borrarBD()">Eliminar BD</ion-button> 
+    <ion-list>
+      <ion-item-sliding *ngFor="let item of contactos.__zone_symbol__value">
+        <ion-item>
+          <ion-avatar>
+            <img alt="Contacto" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          </ion-avatar>
+          <ion-label>
+            <!--word-wrap para los cortes entre palabras  white-space para que aparezca todo el texto en varias lineas y no se corte-->
+            <h2 style="word-wrap: break-word; white-space: normal;">{{ item.strNombre }}</h2>
+            
+            <p>{{ item.intNumero }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-item-sliding>      
+    </ion-list>     
+  </ion-card>
 </ion-content>

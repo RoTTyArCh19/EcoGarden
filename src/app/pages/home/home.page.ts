@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { BdlocalService } from 'src/app/services/bdlocal.service';
+import { Iagenda } from 'src/app/interfaces/iagenda';
 
 @Component({
   selector: 'app-home',
@@ -9,16 +10,27 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class HomePage {
 
-  usuario: any;
-  constructor(private activatedRoute: ActivatedRoute, 
-              private router: Router) {
-    //recibir el parámetro y asignarlo a variable
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (this.router.getCurrentNavigation()?.extras.state) {
-        this.usuario = this.router.getCurrentNavigation()?.extras?.state?.['usuario'];
-        console.log(this.usuario);
-      }
-    })
+  contactos: any = [];
+  nombre!: string;
+  numero!: number;
+  constructor(private bdlocalservice: BdlocalService) {}
+
+  guardar(){
+    console.log(this.nombre);
+    console.log(this.numero);
+    
+    this.bdlocalservice.guardarContactos(this.nombre,this.numero);
+    this.contactos =(this.bdlocalservice.mostrarBD());
+    console.log(this.contactos);
   }
 
+  eliminar(){
+    console.log(this.numero);    
+    this.bdlocalservice.quitarContactos(this.numero);
+    this.contactos =(this.bdlocalservice.mostrarBD());
+  }
+  borrarBD(){
+    this.bdlocalservice.borrarBD();
+    this.contactos =(this.bdlocalservice.mostrarBD());
+  }
 }
