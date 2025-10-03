@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'pageconcomponentes',
     loadChildren: () => import('./pages/pageconcomponentes/pageconcomponentes.module').then( m => m.PageconcomponentesPageModule)
   },
+  {
+    path: '**',
+    loadChildren: () => import('./pages/notfound/notfound.module').then( m => m.NotfoundPageModule)
+  },
 ];
 
 @NgModule({
