@@ -1,20 +1,34 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="mycolor">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/pageconcomponentes"></ion-back-button>
+    </ion-buttons>
     <ion-title>Página No Encontrada</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-<ion-card>
-  <img alt="404" src="https://www.shutterstock.com/image-vector/oops-404-sorry-page-not-260nw-2330827325.jpg" />
-</ion-card>
-<ion-card>
-  <ion-card-header>
-    <ion-card-title>Error 404</ion-card-title>
-  </ion-card-header>
+<ion-content [fullscreen]="true" class="ion-text-center">
+  <div class="error-container">
+    <ion-card>
+      <img alt="404" src="https://www.shutterstock.com/image-vector/oops-404-sorry-page-not-260nw-2330827325.jpg" />
+    </ion-card>
+    
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Error 404</ion-card-title>
+      </ion-card-header>
 
-  <ion-card-content>
-   Esta pagina no existe o esta en Construcción
-  </ion-card-content>
-</ion-card>
+      <ion-card-content>
+        Esta página no existe o está en Construcción
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="block" color="mycolor" 
+               routerLink="/pageconcomponentes" 
+               routerDirection="root" 
+               class="back-button">
+      <ion-icon name="home-outline" slot="start"></ion-icon>
+      Volver al Menú Principal
+    </ion-button>
+  </div>
 </ion-content>

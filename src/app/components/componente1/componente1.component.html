@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true" class="ion-padding-horizontal">
+<ion-content [fullscreen]="true">
   <div class="hero-section animate-fade">
     <ion-img 
       class="hero-image"
@@ -33,5 +33,13 @@
       <h3>Diseño Responsive</h3>
       <p>Funciona perfectamente en todos tus dispositivos</p>
     </div>
+  </div>
+
+  <!-- Botón de contacto agregado -->
+  <div class="contact-section ion-padding">
+    <ion-button expand="block" color="mycolor" routerLink="/contacto" routerDirection="forward">
+      <ion-icon name="mail-outline" slot="start"></ion-icon>
+      CONTACTE CON NOSOTROS
+    </ion-button>
   </div>
 </ion-content>

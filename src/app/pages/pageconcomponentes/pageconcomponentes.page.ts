@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AnimationController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-pageconcomponentes',
@@ -10,32 +11,45 @@ import { AnimationController } from '@ionic/angular';
 })
 export class PageconcomponentesPage implements OnInit {
 
+  usuarioActual: any;
+
   constructor(
     private router: Router,
-    private animationCtrl: AnimationController
+    private authService: AuthService,
+    private alertController: AlertController
   ) { }
 
   ngOnInit() {
+    this.usuarioActual = this.authService.getUsuarioActual();
+    this.router.navigate(['pageconcomponentes/uno']);
   }
 
   segmentChanged($event: any) {
-    console.log($event);
     let direccion = $event.detail.value;
-    console.log(direccion);
     this.router.navigate(['pageconcomponentes/' + direccion]);
   }
 
   async logout() {
-    // Crear animación de salida
-    const animation = this.animationCtrl.create()
-      .addElement(document.querySelector('ion-content') as HTMLElement)
-      .duration(500)
-      .easing('ease-out')
-      .fromTo('opacity', '1', '0')
-      .fromTo('transform', 'translateY(0)', 'translateY(20px)');
+    const alert = await this.alertController.create({
+      header: 'Cerrar Sesión',
+      message: '¿Estás seguro de que quieres salir?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Sí, Salir',
+          cssClass: 'danger',
+          handler: () => {
+            // Logout directo sin animaciones que afecten el DOM
+            this.authService.logout();
+          }
+        }
+      ]
+    });
 
-    // Ejecutar animación y luego navegar
-    await animation.play();
-    this.router.navigate(['/inicial']);
+    await alert.present();
   }
 }

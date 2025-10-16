@@ -1,11 +1,15 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="mycolor">
+    <ion-buttons slot="start">
+      <ion-title *ngIf="usuarioActual" class="welcome-title">
+        Bienvenid@ {{usuarioActual.nombreUsuario}} a Ecogarden
+      </ion-title>
+    </ion-buttons>
     <ion-buttons slot="end">
       <ion-button (click)="logout()" fill="clear" color="dark" class="logout-btn">
         <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="ion-padding-top ion-text-center">EcoGarden</ion-title>
   </ion-toolbar>
   <ion-toolbar color="mycolor">
     <ion-segment (ionChange)="segmentChanged($event)" value="uno">
@@ -22,8 +26,6 @@
   </ion-toolbar>
 </ion-header>
 
-<!--ion-router-outlet para elementos heredados y 
-en este caso dibujaré mis componentes-->
 <ion-content>
   <ion-router-outlet></ion-router-outlet>
 </ion-content>

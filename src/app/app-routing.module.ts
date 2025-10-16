@@ -20,6 +20,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/pageconcomponentes/pageconcomponentes.module').then( m => m.PageconcomponentesPageModule)
   },
   {
+    path: 'registro',
+    loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/notfound/notfound.module').then( m => m.NotfoundPageModule)
   },
