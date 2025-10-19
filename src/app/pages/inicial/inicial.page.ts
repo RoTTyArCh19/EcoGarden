@@ -18,6 +18,8 @@ export class InicialPage implements OnInit {
 
   field: string = "";
   errorLogin: boolean = false;
+  cargando: boolean = false;
+  mensajeError: string = "";
 
   constructor(
     public toastController: ToastController, 
@@ -26,24 +28,45 @@ export class InicialPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Limpiar datos de sesión al cargar la página de login
+    localStorage.removeItem('usuario_actual');
   }
 
-  navegar() {
+  async navegar() {
+    console.log('Iniciando proceso de login...');
+    
     if (this.validateModel(this.usuario)) {
-      const loginExitoso = this.authService.login(this.usuario.email, this.usuario.contrasena);
+      this.cargando = true;
+      this.errorLogin = false;
       
-      if (loginExitoso) {
-        this.errorLogin = false;
-        let navigationExtras: NavigationExtras = {
-          state: { usuario: this.authService.getUsuarioActual() }
-        };
-        this.router.navigate(['/pageconcomponentes'], navigationExtras);
-      } else {
+      try {
+        const resultado = await this.authService.login(this.usuario.email, this.usuario.contrasena);
+        console.log('Resultado del login:', resultado);
+        
+        if (resultado.exito) {
+          this.presentToast("middle", "¡Login exitoso!", 2000);
+          let navigationExtras: NavigationExtras = {
+            state: { usuario: this.authService.getUsuarioActual() }
+          };
+          // Pequeño delay para que se vea el toast
+          setTimeout(() => {
+            this.router.navigate(['/pageconcomponentes'], navigationExtras);
+          }, 500);
+        } else {
+          this.errorLogin = true;
+          this.mensajeError = resultado.mensaje;
+          this.presentToast("middle", resultado.mensaje, 4000);
+        }
+      } catch (error) {
+        console.error('Error completo en login:', error);
         this.errorLogin = true;
-        this.presentToast("middle", "Error: Email o contraseña incorrectos", 5000);
+        this.mensajeError = "Error al iniciar sesión";
+        this.presentToast("middle", "Error al iniciar sesión", 4000);
+      } finally {
+        this.cargando = false;
       }
     } else {
-      this.presentToast("middle", "Error: Falta " + this.field, 5000);
+      this.presentToast("middle", "Error: Falta " + this.field, 4000);
     }
   }
 
@@ -65,5 +88,12 @@ export class InicialPage implements OnInit {
     });
 
     await toast.present();
+  }
+
+  // Método para probar login rápido
+  async loginRapido(email: string, contrasena: string) {
+    this.usuario.email = email;
+    this.usuario.contrasena = contrasena;
+    await this.navegar();
   }
 }

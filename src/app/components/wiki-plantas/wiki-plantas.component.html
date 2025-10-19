@@ -1,0 +1,201 @@
+<div class="wiki-plantas-container responsive-container">
+  <div class="scrollable-content">
+    <header class="header centered-content">
+      <div class="header-content">
+        <h1>🌿 Wiki de Plantas</h1>
+        <p>Explora nuestra colección de {{ getTotalPlantas() }} plantas diferentes</p>
+      </div>
+    </header>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="error" class="error-message">
+      <div class="error-content">
+        <span class="error-icon">⚠️</span>
+        <span>{{ error }}</span>
+        <button (click)="recargar()" class="btn btn-retry">Reintentar</button>
+      </div>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls" *ngIf="!error">
+      <div class="search-section">
+        <div class="search-bar">
+          <input
+            type="text"
+            [(ngModel)]="terminoBusqueda"
+            placeholder="Buscar por nombre, tipo o descripción..."
+            (keyup.enter)="buscarPlantas()"
+            class="search-input"
+            #searchInput
+          >
+          <div class="search-buttons">
+            <button (click)="buscarPlantas()" class="btn btn-primary" [disabled]="cargando">
+              <span class="btn-icon">🔍</span>
+              Buscar
+            </button>
+            <button (click)="limpiarBusqueda()" class="btn btn-secondary">
+              <span class="btn-icon">🔄</span>
+              Limpiar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters-section">
+        <div class="filter-group">
+          <label for="tipoFilter">Filtrar por tipo:</label>
+          <select 
+            id="tipoFilter"
+            [(ngModel)]="tipoFiltro" 
+            (change)="filtrarPorTipo(tipoFiltro)"
+            class="filter-select"
+            [disabled]="cargando"
+          >
+            <option value="todas">🌿 Todas las plantas</option>
+            <option *ngFor="let tipo of obtenerTiposUnicos()" [value]="tipo.toLowerCase()">
+              {{ tipo }}
+            </option>
+          </select>
+        </div>
+
+        <div class="stats">
+          <span class="stat-badge">Mostrando: {{ getPlantasMostradas() }}</span>
+          <span class="stat-badge">Total: {{ getTotalPlantas() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="cargando" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Cargando plantas...</p>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content" *ngIf="!cargando && !error">
+      
+      <!-- Vista de lista -->
+      <div *ngIf="!plantaSeleccionada" class="list-view">
+        
+        <!-- Sin resultados -->
+        <div *ngIf="plantasFiltradas.length === 0" class="no-results">
+          <div class="no-results-content">
+            <span class="no-results-icon">🌱</span>
+            <h3>No se encontraron plantas</h3>
+            <p>Intenta con otros términos de búsqueda o filtros</p>
+            <button (click)="limpiarBusqueda()" class="btn btn-primary">
+              Mostrar todas las plantas
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid de plantas -->
+        <div *ngIf="plantasFiltradas.length > 0" class="plantas-grid">
+          <div
+            *ngFor="let planta of plantasFiltradas"
+            class="planta-card"
+            (click)="seleccionarPlanta(planta)"
+            [class.loading]="imagenesCargando[planta.id]"
+          >
+            <div class="planta-image-container">
+              <img 
+                [src]="planta.imagen" 
+                [alt]="'Imagen de ' + planta.nombre" 
+                class="planta-img"
+                (load)="imagenCargada(planta.id)"
+                (error)="manejarErrorImagen($event, planta)"
+              />
+              <div *ngIf="imagenesCargando[planta.id]" class="image-loading">
+                <div class="loading-spinner small"></div>
+              </div>
+            </div>
+            
+            <div class="planta-info">
+              <h3 class="planta-nombre">{{ planta.nombre }}</h3>
+              <p class="planta-cientifico">{{ planta.nombreCientifico }}</p>
+              <span class="tipo-badge" [class]="'tipo-' + planta.tipo.toLowerCase()">
+                {{ planta.tipo }}
+              </span>
+              <p class="planta-descripcion">{{ planta.descripcion.substring(0, 100) }}...</p>
+              
+              <div class="planta-cuidados-preview">
+                <span class="cuidado-item">💧 {{ planta.cuidados.riego }}</span>
+                <span class="cuidado-item">☀️ {{ planta.cuidados.luz }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista de detalle -->
+      <div *ngIf="plantaSeleccionada" class="detail-view">
+        <button (click)="plantaSeleccionada = null" class="btn btn-back">
+          <span class="btn-icon">←</span>
+          Volver a la lista
+        </button>
+        
+        <div class="planta-detalle">
+          <div class="detalle-header">
+            <div class="detalle-image-container">
+              <img 
+                [src]="plantaSeleccionada.imagen" 
+                [alt]="'Imagen detallada de ' + plantaSeleccionada.nombre" 
+                class="detalle-img"
+                (error)="manejarErrorImagen($event, plantaSeleccionada)"
+              />
+            </div>
+            
+            <div class="detalle-info">
+              <div class="detalle-titulo">
+                <h1>{{ plantaSeleccionada.nombre }}</h1>
+                <p class="cientifico">{{ plantaSeleccionada.nombreCientifico }}</p>
+                <span class="tipo-badge large" [class]="'tipo-' + plantaSeleccionada.tipo.toLowerCase()">
+                  {{ plantaSeleccionada.tipo }}
+                </span>
+              </div>
+              
+              <p class="descripcion">{{ plantaSeleccionada.descripcion }}</p>
+            </div>
+          </div>
+
+          <div class="detalle-cuidados">
+            <h2>🌱 Guía de Cuidados</h2>
+            <div class="cuidados-grid">
+              <div class="cuidado-card">
+                <div class="cuidado-icon">💧</div>
+                <div class="cuidado-content">
+                  <h3>Riego</h3>
+                  <p>{{ plantaSeleccionada.cuidados.riego }}</p>
+                </div>
+              </div>
+              
+              <div class="cuidado-card">
+                <div class="cuidado-icon">☀️</div>
+                <div class="cuidado-content">
+                  <h3>Luz</h3>
+                  <p>{{ plantaSeleccionada.cuidados.luz }}</p>
+                </div>
+              </div>
+              
+              <div class="cuidado-card">
+                <div class="cuidado-icon">🌡️</div>
+                <div class="cuidado-content">
+                  <h3>Temperatura</h3>
+                  <p>{{ plantaSeleccionada.cuidados.temperatura }}</p>
+                </div>
+              </div>
+              
+              <div class="cuidado-card">
+                <div class="cuidado-icon">🟫</div>
+                <div class="cuidado-content">
+                  <h3>Suelo</h3>
+                  <p>{{ plantaSeleccionada.cuidados.suelo }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

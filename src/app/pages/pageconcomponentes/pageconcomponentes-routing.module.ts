@@ -5,6 +5,7 @@ import { PageconcomponentesPage } from './pageconcomponentes.page';
 import { Componente1Component } from 'src/app/components/componente1/componente1.component';
 import { Componente2Component } from 'src/app/components/componente2/componente2.component';
 import { Componente3Component } from 'src/app/components/componente3/componente3.component';
+import { WikiPlantasComponent } from 'src/app/components/wiki-plantas/wiki-plantas.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,10 @@ const routes: Routes = [
       {
         path: 'tres',
         component: Componente3Component
+      },
+      {
+        path: 'wiki',
+        component: WikiPlantasComponent
       }
     ]
   }

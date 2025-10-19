@@ -1,0 +1,680 @@
+// Variables
+$primary-color: #4caf50;
+$secondary-color: #81c784;
+$background-color: #121212;
+$card-background: #1e1e1e;
+$text-color: #e0e0e0;
+$text-secondary: #9e9e9e;
+$border-color: #333333;
+$border-radius: 12px;
+$shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+$transition: all 0.3s ease;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin responsive-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+// Estilos base con scroll y modo oscuro
+.wiki-plantas-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: $background-color;
+  min-height: 100vh;
+  color: $text-color;
+  overflow-x: hidden; // Prevenir scroll horizontal no deseado
+  
+  // Habilitar scroll vertical cuando sea necesario
+  .scrollable-content {
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    
+    // Personalizar scrollbar para modo oscuro
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #2d2d2d;
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 4px;
+      
+      &:hover {
+        background: #777;
+      }
+    }
+  }
+}
+
+// Header
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+
+  .header-content {
+    h1 {
+      color: $primary-color;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// Mensajes de error
+.error-message {
+  background: #311b1b;
+  border: 1px solid #d32f2f;
+  border-radius: $border-radius;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ff8a80;
+
+  .error-content {
+    @include flex-center;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    .error-icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// Controles - Mejorados para modo oscuro
+.controls {
+  background: $card-background;
+  padding: 20px;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  margin-bottom: 30px;
+  border: 1px solid $border-color;
+
+  .search-section {
+    margin-bottom: 20px;
+
+    .search-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .search-input {
+        flex: 1;
+        max-width: 500px;
+        padding: 12px 16px;
+        border: 2px solid $border-color;
+        border-radius: $border-radius;
+        font-size: 1rem;
+        transition: $transition;
+        background: #2d2d2d;
+        color: $text-color;
+
+        &::placeholder {
+          color: #666;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+          background: #333;
+        }
+      }
+
+      .search-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+  }
+
+  .filters-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      label {
+        font-weight: 600;
+        color: $text-color;
+        white-space: nowrap;
+      }
+
+      .filter-select {
+        padding: 10px 12px;
+        border: 2px solid $border-color;
+        border-radius: $border-radius;
+        background: #2d2d2d;
+        color: $text-color;
+        font-size: 0.9rem;
+        min-width: 200px;
+        transition: $transition;
+        cursor: pointer;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          background: #333;
+        }
+
+        option {
+          background: #2d2d2d;
+          color: $text-color;
+          padding: 10px;
+        }
+      }
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .stat-badge {
+        background: $primary-color;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Estados de carga
+.loading-state {
+  @include flex-center;
+  flex-direction: column;
+  padding: 40px;
+  gap: 15px;
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #333;
+    border-top: 4px solid $primary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    color: $text-secondary;
+    font-size: 1.1rem;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Vista de lista
+.list-view {
+  .no-results {
+    @include flex-center;
+    flex-direction: column;
+    padding: 60px 20px;
+    text-align: center;
+
+    .no-results-content {
+      .no-results-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      h3 {
+        color: $text-secondary;
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+      }
+
+      p {
+        color: #888;
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .plantas-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    justify-content: center;
+
+    @media (min-width: 480px) {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+  }
+}
+
+// Tarjetas de plantas
+.planta-card {
+  background: $card-background;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  overflow: hidden;
+  transition: $transition;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid $border-color;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+    border-color: $primary-color;
+  }
+
+  &.loading {
+    opacity: 0.7;
+  }
+
+  .planta-image-container {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; // Proporción 4:3 para imágenes
+    overflow: hidden;
+
+    .planta-img {
+      @include responsive-image;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transition: $transition;
+    }
+
+    .image-loading {
+      @include flex-center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(30, 30, 30, 0.8);
+
+      .loading-spinner.small {
+        width: 30px;
+        height: 30px;
+        border-width: 3px;
+        border-color: #333;
+        border-top-color: $primary-color;
+      }
+    }
+  }
+
+  .planta-info {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .planta-nombre {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $text-color;
+      margin: 0;
+      text-align: center;
+    }
+
+    .planta-cientifico {
+      font-style: italic;
+      color: $text-secondary;
+      text-align: center;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .tipo-badge {
+      align-self: center;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &.tipo-suculenta { background: #fbc02d; color: #333; }
+      &.tipo-cactus { background: #388e3c; color: white; }
+      &.tipo-arbusto { background: #689f38; color: white; }
+      &.tipo-interior { background: #1976d2; color: white; }
+      &.tipo-trepadora { background: #7b1fa2; color: white; }
+      &.tipo-árbol { background: #5d4037; color: white; }
+    }
+
+    .planta-descripcion {
+      color: $text-secondary;
+      line-height: 1.5;
+      margin: 0;
+      flex: 1;
+    }
+
+    .planta-cuidados-preview {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      .cuidado-item {
+        font-size: 0.85rem;
+        color: $text-secondary;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+  }
+}
+
+// Vista de detalle
+.detail-view {
+  .btn-back {
+    margin-bottom: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #555;
+    color: white;
+    border: none;
+    border-radius: $border-radius;
+    cursor: pointer;
+    transition: $transition;
+    font-size: 1rem;
+
+    &:hover {
+      background: #666;
+      transform: translateX(-5px);
+    }
+  }
+
+  .planta-detalle {
+    background: $card-background;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+    overflow: hidden;
+    border: 1px solid $border-color;
+
+    .detalle-header {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .detalle-image-container {
+        flex: 1;
+        min-width: 300px;
+        
+        .detalle-img {
+          @include responsive-image;
+          border-radius: $border-radius;
+          max-height: 400px;
+          object-fit: cover;
+        }
+      }
+
+      .detalle-info {
+        flex: 1;
+        padding: 0 20px 20px;
+
+        @media (min-width: 768px) {
+          padding: 20px;
+        }
+
+        .detalle-titulo {
+          text-align: center;
+          margin-bottom: 20px;
+
+          @media (min-width: 768px) {
+            text-align: left;
+          }
+
+          h1 {
+            color: $primary-color;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+          }
+
+          .cientifico {
+            font-style: italic;
+            color: $text-secondary;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+          }
+
+          .tipo-badge.large {
+            font-size: 0.9rem;
+            padding: 6px 16px;
+          }
+        }
+
+        .descripcion {
+          color: $text-secondary;
+          line-height: 1.7;
+          font-size: 1.05rem;
+          text-align: justify;
+        }
+      }
+    }
+
+    .detalle-cuidados {
+      padding: 30px;
+      background: #2d2d2d;
+      border-top: 1px solid $border-color;
+
+      h2 {
+        text-align: center;
+        color: $primary-color;
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+      }
+
+      .cuidados-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        justify-content: center;
+
+        @media (min-width: 576px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (min-width: 992px) {
+          grid-template-columns: repeat(4, 1fr);
+        }
+
+        .cuidado-card {
+          background: $card-background;
+          padding: 20px;
+          border-radius: $border-radius;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          text-align: center;
+          transition: $transition;
+          border: 1px solid $border-color;
+
+          &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-color: $primary-color;
+          }
+
+          .cuidado-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+          }
+
+          .cuidado-content {
+            h3 {
+              color: $text-color;
+              margin-bottom: 10px;
+              font-size: 1.1rem;
+            }
+
+            p {
+              color: $text-secondary;
+              line-height: 1.5;
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Botones
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: $transition;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &.btn-primary {
+    background: $primary-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: darken($primary-color, 10%);
+      transform: translateY(-2px);
+    }
+  }
+
+  &.btn-secondary {
+    background: #555;
+    color: white;
+
+    &:hover {
+      background: #666;
+      transform: translateY(-2px);
+    }
+  }
+
+  &.btn-retry {
+    background: #d32f2f;
+    color: white;
+
+    &:hover {
+      background: #c62828;
+    }
+  }
+
+  .btn-icon {
+    font-size: 1rem;
+  }
+}
+
+// Utilidades de centrado
+.centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.responsive-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+// Mejoras de accesibilidad
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+// Focus visible para accesibilidad
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+// Scroll suave para toda la aplicación
+html {
+  scroll-behavior: smooth;
+}
+
+// Asegurar que el body tenga fondo oscuro
+body {
+  background-color: $background-color;
+  color: $text-color;
+}

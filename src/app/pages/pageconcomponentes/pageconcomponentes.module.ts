@@ -10,6 +10,7 @@ import { PageconcomponentesPage } from './pageconcomponentes.page';
 import { Componente1Component } from 'src/app/components/componente1/componente1.component';
 import { Componente2Component } from 'src/app/components/componente2/componente2.component';
 import { Componente3Component } from 'src/app/components/componente3/componente3.component';
+import { WikiPlantasComponent } from 'src/app/components/wiki-plantas/wiki-plantas.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { Componente3Component } from 'src/app/components/componente3/componente3
   declarations: [PageconcomponentesPage, 
     Componente1Component,
     Componente2Component,
-    Componente3Component]
+    Componente3Component,
+    WikiPlantasComponent]
   /*Componente1Component lo agregué en declarations para que así la PAGE sepa que debe 
   compartir sus recursos con este component, si no lo hago no podría escribir etiquetas 'ion-algo' en
   el html.

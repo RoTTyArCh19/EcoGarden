@@ -15,37 +15,60 @@
     <ion-card-content>
       <ion-list>
         <ion-item>
-          <ion-input label="Nombre de usuario" labelPlacement="floating" 
-                     type="text" placeholder="Ingrese su nombre de usuario" 
-                     name="nombreUsuario" [(ngModel)]="usuario.nombreUsuario"
-                     (ionInput)="validarCampo('nombreUsuario')">
+          <ion-input 
+            label="Nombre de usuario" 
+            labelPlacement="floating" 
+            type="text" 
+            placeholder="Ingrese su nombre de usuario" 
+            name="nombreUsuario" 
+            [(ngModel)]="usuario.nombreUsuario"
+            (ionInput)="validarCampo('nombreUsuario')"
+            [disabled]="cargando">
           </ion-input>
         </ion-item>
         
         <ion-item>
-          <ion-input label="Nombre completo" labelPlacement="floating" 
-                     type="text" placeholder="Ingrese su nombre completo" 
-                     name="nombre" [(ngModel)]="usuario.nombre"
-                     (ionInput)="validarCampo('nombre')">
+          <ion-input 
+            label="Nombre completo" 
+            labelPlacement="floating" 
+            type="text" 
+            placeholder="Ingrese su nombre completo" 
+            name="nombre" 
+            [(ngModel)]="usuario.nombre"
+            (ionInput)="validarCampo('nombre')"
+            [disabled]="cargando">
           </ion-input>
         </ion-item>
         
         <ion-item>
-          <ion-input label="Email" labelPlacement="floating" 
-                     type="email" placeholder="econotes@domain.com" 
-                     name="email" [(ngModel)]="usuario.email"
-                     (ionInput)="validarEmail()">
+          <ion-input 
+            label="Email" 
+            labelPlacement="floating" 
+            type="email" 
+            placeholder="econotes@domain.com" 
+            name="email" 
+            [(ngModel)]="usuario.email"
+            (ionBlur)="validarEmail()"
+            (ionInput)="validarEmail()"
+            [disabled]="cargando">
           </ion-input>
           <ion-note *ngIf="emailInvalido" color="danger" slot="error">
             Por favor ingrese un email válido
           </ion-note>
+          <ion-note *ngIf="verificandoEmail" slot="helper">
+            Verificando email...
+          </ion-note>
         </ion-item>
         
         <ion-item>
-          <ion-input label="Contraseña" labelPlacement="floating" 
-                     type="password" placeholder="Ingrese contraseña" 
-                     [(ngModel)]="usuario.contrasena"
-                     (ionInput)="validarCampo('contrasena')">
+          <ion-input 
+            label="Contraseña" 
+            labelPlacement="floating" 
+            type="password" 
+            placeholder="Ingrese contraseña" 
+            [(ngModel)]="usuario.contrasena"
+            (ionInput)="validarCampo('contrasena')"
+            [disabled]="cargando">
           </ion-input>
         </ion-item>      
       </ion-list>
@@ -57,13 +80,23 @@
       </div>
       
       <br>
-      <ion-button expand="block" (click)="registrar()" color="mycolor" 
-                 [disabled]="!formularioValido()">
-        Registrarse
+      <ion-button 
+        expand="block" 
+        (click)="registrar()" 
+        color="mycolor" 
+        [disabled]="!formularioValido()">
+        <ion-spinner *ngIf="cargando" name="crescent"></ion-spinner>
+        <span *ngIf="!cargando">Registrarse</span>
       </ion-button>
       
-      <ion-button expand="block" fill="clear" color="medium" 
-                 routerLink="/inicial" routerDirection="root">
+      <ion-button 
+        expand="block" 
+        fill="clear" 
+        color="medium" 
+        routerLink="/inicial" 
+        routerDirection="root"
+        [disabled]="cargando"
+        class="ion-margin-top">
         ¿Ya tienes cuenta? Inicia sesión
       </ion-button>
     </ion-card-content>

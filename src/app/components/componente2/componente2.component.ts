@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PlantasSupabaseService } from 'src/app/services/plantas-supabase.service';
 
 @Component({
   selector: 'app-componente2',
@@ -19,20 +20,32 @@ export class Componente2Component implements OnInit {
 
   plantas: any[] = [];
   editIndex: number | null = null;
+  editId: string | null = null;
 
-  constructor() {}
+  constructor(private plantasService: PlantasSupabaseService) {}
 
-  ngOnInit() {}
+  async ngOnInit() {
+    await this.cargarPlantas();
+  }
 
-  crear() {
+  async cargarPlantas() {
+    this.plantas = await this.plantasService.getPlantas();
+  }
+
+  async crear() {
     if (this.dato.cultivador && this.dato.nombre && this.dato.tipo && this.dato.fecha) {
-      if (this.editIndex !== null) {
+      if (this.editId !== null) {
         // Editando existente
-        this.plantas[this.editIndex] = { ...this.dato };
-        this.editIndex = null;
+        const resultado = await this.plantasService.actualizarPlanta(this.editId, this.dato);
+        if (resultado) {
+          await this.cargarPlantas();
+        }
       } else {
         // Nuevo registro
-        this.plantas.push({ ...this.dato });
+        const resultado = await this.plantasService.crearPlanta(this.dato);
+        if (resultado) {
+          await this.cargarPlantas();
+        }
       }
       this.limpiar();
     } else {
@@ -43,18 +56,24 @@ export class Componente2Component implements OnInit {
   limpiar() {
     this.dato = { cultivador: '', nombre: '', tipo: '', fecha: '' };
     this.editIndex = null;
+    this.editId = null;
   }
 
   editar(index: number) {
     this.dato = { ...this.plantas[index] };
     this.editIndex = index;
+    this.editId = this.plantas[index].id;
   }
 
-  eliminar(index: number) {
-    this.plantas.splice(index, 1);
-    if (this.editIndex === index) {
-      this.limpiar();
+  async eliminar(index: number) {
+    const planta = this.plantas[index];
+    const resultado = await this.plantasService.eliminarPlanta(planta.id);
+    
+    if (resultado) {
+      await this.cargarPlantas();
+      if (this.editIndex === index) {
+        this.limpiar();
+      }
     }
   }
 }
-

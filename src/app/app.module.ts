@@ -12,10 +12,19 @@ import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './services/auth.service';
 
 
+//import de http acutalizado a esta version 
+import { HttpClientModule } from '@angular/common/http';
+import { PlantasService } from './services/plantas.service';
+import { ImagenService } from './services/imagen.service';
+import { SupabaseService } from './services/supabase.service';
+import { PlantasSupabaseService } from './services/plantas-supabase.service';
+import { NotasSupabaseService } from './services/notas-supabase.service';
+
+
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,IonicStorageModule.forRoot()],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy,},AuthGuard,AuthService],
+  imports: [BrowserModule,IonicModule.forRoot(), AppRoutingModule,IonicStorageModule.forRoot(), HttpClientModule,],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy,},AuthGuard,AuthService,SupabaseService,PlantasSupabaseService,NotasSupabaseService,PlantasService,ImagenService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

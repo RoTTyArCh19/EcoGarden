@@ -2,6 +2,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    //agrego para quitar restricciones 
+    "strictPropertyInitialization": false,
+    "types": ["node"],
+    "skipLibCheck": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -19,8 +23,8 @@
     "target": "es2022",
     "module": "es2020",
     "lib": [
-      "es2018", 
-      "dom"
+      "ES2022", 
+      "DOM"
     ],
     "useDefineForClassFields": false
   },
@@ -28,6 +32,7 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    //para quitar restricciones 
+    "strictTemplates": false
   }
 }

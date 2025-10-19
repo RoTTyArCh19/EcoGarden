@@ -22,6 +22,8 @@ export class RegistroPage implements OnInit {
   emailInvalido: boolean = false;
   errorRegistro: boolean = false;
   mensajeError: string = "";
+  cargando: boolean = false;
+  verificandoEmail: boolean = false;
 
   constructor(
     public toastController: ToastController, 
@@ -32,27 +34,79 @@ export class RegistroPage implements OnInit {
   ngOnInit() {
   }
 
-  registrar() {
+  async registrar() {
+    console.log('Iniciando registro...', this.usuario);
+    
     if (this.validateModel(this.usuario) && !this.emailInvalido) {
-      const registroExitoso = this.authService.registrarUsuario(this.usuario);
+      this.cargando = true;
+      this.errorRegistro = false;
       
-      if (registroExitoso) {
-        this.presentToast("middle", "Usuario registrado exitosamente", 3000);
-        this.router.navigate(['/inicial']);
-      } else {
+      try {
+        const resultado = await this.authService.registrarUsuario(this.usuario);
+        console.log('Resultado del registro:', resultado);
+        
+        if (resultado.exito) {
+          this.presentToast("middle", resultado.mensaje, 3000);
+          // Limpiar formulario
+          this.usuario = {
+            nombreUsuario: "",
+            nombre: "",
+            email: "",
+            contrasena: ""
+          };
+          // Navegar al login después de un breve delay
+          setTimeout(() => {
+            this.router.navigate(['/inicial']);
+          }, 1000);
+        } else {
+          this.errorRegistro = true;
+          this.mensajeError = resultado.mensaje;
+          this.presentToast("middle", resultado.mensaje, 5000);
+        }
+      } catch (error) {
+        console.error('Error completo en registro:', error);
         this.errorRegistro = true;
-        this.mensajeError = "El email ya está registrado";
-        this.presentToast("middle", "Error: El email ya está en uso", 5000);
+        this.mensajeError = "Error inesperado al registrar usuario";
+        this.presentToast("middle", "Error inesperado al registrar usuario", 5000);
+      } finally {
+        this.cargando = false;
       }
     } else {
-      this.presentToast("middle", "Error: Complete todos los campos correctamente", 5000);
+      const mensaje = this.emailInvalido 
+        ? "Por favor ingrese un email válido" 
+        : "Error: Complete todos los campos correctamente";
+      this.presentToast("middle", mensaje, 5000);
     }
   }
 
-  validarEmail() {
+  async validarEmail() {
+    if (!this.usuario.email) {
+      this.emailInvalido = false;
+      this.errorRegistro = false;
+      return;
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     this.emailInvalido = !emailRegex.test(this.usuario.email);
-    this.errorRegistro = false;
+    
+    if (!this.emailInvalido) {
+      this.verificandoEmail = true;
+      this.errorRegistro = false;
+      
+      try {
+        const emailEnUso = await this.authService.verificarEmailExistente(this.usuario.email);
+        if (emailEnUso) {
+          this.errorRegistro = true;
+          this.mensajeError = "El email ya está registrado";
+        }
+      } catch (error) {
+        console.error('Error verificando email:', error);
+      } finally {
+        this.verificandoEmail = false;
+      }
+    } else {
+      this.errorRegistro = false;
+    }
   }
 
   validarCampo(campo: string) {
@@ -62,7 +116,10 @@ export class RegistroPage implements OnInit {
   }
 
   formularioValido(): boolean {
-    return this.validateModel(this.usuario) && !this.emailInvalido;
+    return this.validateModel(this.usuario) && 
+           !this.emailInvalido && 
+           !this.cargando &&
+           !this.errorRegistro;
   }
 
   validateModel(model: any): boolean {

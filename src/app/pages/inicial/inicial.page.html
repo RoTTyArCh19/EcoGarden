@@ -12,30 +12,51 @@
     <ion-card-content>
       <ion-list>
         <ion-item>
-          <ion-input label="Email" labelPlacement="floating" 
-                     type="email" placeholder="econotes@domain.com" 
-                     name="email" [(ngModel)]="usuario.email">
+          <ion-input 
+            label="Email" 
+            labelPlacement="floating" 
+            type="email" 
+            placeholder="econotes@domain.com" 
+            name="email" 
+            [(ngModel)]="usuario.email"
+            [disabled]="cargando">
           </ion-input>
         </ion-item>
         <ion-item>
-          <ion-input label="Contraseña" labelPlacement="floating" 
-                     type="password" placeholder="Ingrese Contraseña" 
-                     [(ngModel)]="usuario.contrasena">
+          <ion-input 
+            label="Contraseña" 
+            labelPlacement="floating" 
+            type="password" 
+            placeholder="Ingrese Contraseña" 
+            [(ngModel)]="usuario.contrasena"
+            [disabled]="cargando">
           </ion-input>
         </ion-item>      
       </ion-list>
       
       <div *ngIf="errorLogin" class="error-message">
         <ion-text color="danger">
-          Email o contraseña incorrectos
+          {{ mensajeError }}
         </ion-text>
       </div>
       
       <br>
-      <ion-button expand="block" (click)="navegar()" color="mycolor">Iniciar Sesión</ion-button>
-      
-      <ion-button expand="block" fill="clear" color="medium" 
-                 routerLink="/registro" routerDirection="forward">
+      <ion-button 
+        expand="block" 
+        (click)="navegar()" 
+        color="mycolor" 
+        [disabled]="cargando">
+        <ion-spinner *ngIf="cargando" name="crescent"></ion-spinner>
+        <span *ngIf="!cargando">Iniciar Sesión</span>
+      </ion-button>      
+      <ion-button 
+        expand="block" 
+        fill="clear" 
+        color="medium" 
+        routerLink="/registro" 
+        routerDirection="forward"
+        [disabled]="cargando"
+        class="ion-margin-top">
         ¿No tienes cuenta? Regístrate
       </ion-button>
     </ion-card-content>
