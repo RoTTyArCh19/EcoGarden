@@ -19,12 +19,13 @@ import { ImagenService } from './services/imagen.service';
 import { SupabaseService } from './services/supabase.service';
 import { PlantasSupabaseService } from './services/plantas-supabase.service';
 import { NotasSupabaseService } from './services/notas-supabase.service';
+import { CameraService } from './services/camera.service';
 
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule,IonicModule.forRoot(), AppRoutingModule,IonicStorageModule.forRoot(), HttpClientModule,],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy,},AuthGuard,AuthService,SupabaseService,PlantasSupabaseService,NotasSupabaseService,PlantasService,ImagenService],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy,},AuthGuard,AuthService,SupabaseService,PlantasSupabaseService,NotasSupabaseService,PlantasService,ImagenService,CameraService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
