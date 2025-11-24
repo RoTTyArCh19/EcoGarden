@@ -28,8 +28,28 @@ export class InicialPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Limpiar datos de sesión al cargar la página de login
-    localStorage.removeItem('usuario_actual');
+    // Verificar si ya hay una sesión activa al cargar la página
+    this.verificarSesionActiva();
+  }
+
+  private verificarSesionActiva() {
+    if (this.authService.isLoggedIn()) {
+      console.log('Sesión activa encontrada, redirigiendo...');
+      this.cargando = true;
+      
+      // Pequeño delay para mejor UX
+      setTimeout(() => {
+        const usuario = this.authService.getUsuarioActual();
+        let navigationExtras: NavigationExtras = {
+          state: { usuario: usuario }
+        };
+        this.router.navigate(['/pageconcomponentes'], navigationExtras);
+        this.cargando = false;
+      }, 1000);
+    } else {
+      // Limpiar datos de sesión si no está autenticado
+      console.log('No hay sesión activa, mostrando formulario de login');
+    }
   }
 
   async navegar() {

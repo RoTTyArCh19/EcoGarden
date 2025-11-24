@@ -32,6 +32,11 @@ export class RegistroPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Verificar si ya hay sesión activa
+    if (this.authService.isLoggedIn()) {
+      console.log('Ya hay sesión activa, redirigiendo...');
+      this.router.navigate(['/pageconcomponentes']);
+    }
   }
 
   async registrar() {

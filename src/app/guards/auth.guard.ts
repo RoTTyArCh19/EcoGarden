@@ -11,6 +11,8 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): boolean {
     if (this.authService.isLoggedIn()) {
+      // Renovar la sesión cada vez que se accede a una ruta protegida
+      this.authService.renewSession();
       return true;
     } else {
       this.router.navigate(['/inicial']);
